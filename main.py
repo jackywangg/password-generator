@@ -7,88 +7,58 @@ digits = string.digits
 special_characters = string.punctuation
 length = 0
 amount = 0
-all = ""
 
 ## Default these values to False. 
-upper, lower, numbers, s_char = False, False, False, False
 
-print("Please type Yes/No for each of the following character types you want to include: ")
-
-while not (upper or lower or numbers or s_char):
-    print("[You MUST select at least one character type.] \n ")
-
-    ## Asks user if they want to include uppercase letters.
+def get_user_input(prompt):
     while True:
-        print("Do you want to include UPPERCASE letters?")
-        upper_val = input("").lower()
-        if upper_val == "yes":
-            upper = True
-            break
-        elif upper_val == "no":
-            upper = False
-            break
+        val = input(prompt + "\n").lower()
+        if val == "yes":
+            return True
+        elif val == "no":
+            return False
         else:
             print("Not a valid selection. Please try again.")
 
-    ## Asks user if they want to include lowercase letters.
-    while True:
-        print("Do you want to include LOWERCASE letters?")
-        lower_val = input("").lower()
-        if lower_val == "yes":
-            lower = True
-            break
-        elif lower_val == "no":
-            lower = False
-            break
-        else:
-            print("Not a valid selection. Please try again.")
+def get_user_preferences():
+    preferences = {
+        "upper" : False,
+        "lower" : False,
+        "numbers": False,
+        "s_char": False,
+        "all" : ""
+    }
 
+    print("Please type Yes/No for each of the following character types you want to include: ")
 
-    ## Asks user if they want to include numbers.
-    while True:
-        print("Do you want to include NUMBERS?")
-        number_val = input("").lower()
-        if number_val == "yes":
-            numbers = True
-            break
-        elif number_val == "no":
-            numbers = False
-            break
-        else:
-            print("Not a valid selection. Please try again.")
+    while not (preferences["upper"] or preferences["lower"] or preferences["numbers"] or preferences["s_char"]):
+        print("[You MUST select at least one character type.] \n ")
+        preferences["upper"] = get_user_input("Do you want to include UPPERCASE letters?")
+        preferences["lower"] = get_user_input("Do you want to include LOWERCASE letters?")
+        preferences["numbers"] = get_user_input("Do you want to include NUMBERS?")
+        preferences["s_char"] = get_user_input("Do you want to include SPECIAL CHARACTERS?")
+        
+        ## Ensures that there must be at least one character type selected
+        if not (preferences["upper"] or preferences["lower"] or preferences["numbers"] or preferences["s_char"]):
+            print("You have selected " + "Yes " + "for none of the character types. Please try again.")
+        print("")
 
-    ## Asks user if they want to include special characters.
-    while True:
-        print("Do you want to include SPECIAL CHARACTERS?")
-        special_val = input("").lower()
-        if special_val == "yes":
-            s_char = True
-            break
-        elif special_val == "no":
-            s_char = False
-            break
-        else:
-            print("Not a valid selection. Please try again.")
+    ## Prints the list of character types the user has selected
+    print("You have selected the following character types: ")
+    if preferences["upper"]:
+        preferences["all"] += uppercase_letters
+        print("UPPERCASE letters")
+    if preferences["lower"]:
+        preferences["all"] += lowercase_letters
+        print("LOWERCASE letters")
+    if preferences["numbers"]:
+        preferences["all"] += digits
+        print("NUMBERS")
+    if preferences["s_char"]:
+        preferences["all"] += special_characters
+        print("SPECIAL CHARACTERS")
     
-    ## Ensures that there must be at least one character type selected
-    if not (upper or lower or numbers or s_char):
-        print("You have selected " + "Yes " + "for none of the character types. Please try again.")
-    print("")
-
-## Prints the list of character types the user has selected
-print("You have selected the following character types: ")
-if upper:
-    all += uppercase_letters
-    print("UPPERCASE letters")
-if lower:
-    all += lowercase_letters
-    print("LOWERCASE letters")
-if numbers:
-    all += digits
-    print("NUMBERS")
-if s_char:
-    all += special_characters
-    print("SPECIAL CHARACTERS")
+    return preferences
 
 ## Asks user for the password's length.
 def get_password_length():
@@ -129,36 +99,43 @@ def get_password_amount():
             except:
                 print("Please choose a valid number of passwords to generate.")
 
-## Generates password(s) given the user's requirements
-while True:
-    length = get_password_length()
-    amount = get_password_amount()
-    for _ in range(amount):
-        char_list = []
+def password_generator():
+    preferences = get_user_preferences()
 
-        if upper:
-            char_list.append(random.choice(uppercase_letters))
-        if lower:
-            char_list.append(random.choice(lowercase_letters))
-        if numbers:
-            char_list.append(random.choice(digits))
-        if s_char:
-            char_list.append(random.choice(special_characters))
-
-        ## append rest of password with random characters
-        while len(char_list) < length:
-            char_list.append(random.choice(all))
-
-        random.shuffle(char_list)
-
-        password = "".join(char_list)
-        print(password)
+    ## Generates password(s) given the user's requirements
     while True:
-        new_set = input("Generate new set? (Yes/No): ").lower()
-        if (new_set == "yes"):
-            break
-        elif (new_set == "no"):
-            print("Thank you for using Password Generator!")
-            exit()
-        else:
-            print("You must enter a valid selection. Please try again.")
+        length = get_password_length()
+        amount = get_password_amount()
+        while True:
+            for _ in range(amount):
+                char_list = []
+
+                if preferences["upper"]:
+                    char_list.append(random.choice(uppercase_letters))
+                if preferences["lower"]:
+                    char_list.append(random.choice(lowercase_letters))
+                if preferences["numbers"]:
+                    char_list.append(random.choice(digits))
+                if preferences["s_char"]:
+                    char_list.append(random.choice(special_characters))
+
+                ## append rest of password with random characters
+                while len(char_list) < length:
+                    char_list.append(random.choice(preferences["all"]))
+
+                random.shuffle(char_list)
+
+                password = "".join(char_list)
+                print(password)
+            while True:
+                new_set = input("Generate new set? (Yes/No): ").lower()
+                if (new_set == "yes"):
+                    break
+                elif (new_set == "no"):
+                    print("Thank you for using Password Generator!")
+                    exit()
+                else:
+                    print("You must enter a valid selection. Please try again.")
+
+if __name__ == "__main__":
+    password_generator()
