@@ -1,19 +1,21 @@
 import random
+import string
 
-uppercase_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-lowercase_letters = uppercase_letters.lower()
-digits = "0123456789"
-special_characters = "#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+uppercase_letters = string.ascii_uppercase
+lowercase_letters = string.ascii_lowercase
+digits = string.digits
+special_characters = string.punctuation
 length = 0
 amount = 0
 all = ""
 
+## Default these values to False. 
 upper, lower, numbers, s_char = False, False, False, False
 
 print("Please type Yes/No for each of the following character types you want to include: ")
 
 while not (upper or lower or numbers or s_char):
-    print("You MUST select at least one character type.")
+    print("[You MUST select at least one character type.] \n ")
 
     ## Asks user if they want to include uppercase letters.
     while True:
@@ -88,30 +90,49 @@ if s_char:
     all += special_characters
     print("SPECIAL CHARACTERS")
 
-while True:
-    ## Asks user about the password's length.
-    print("How many characters (must be greater than 0) do you want your password to be?")
+## Asks user for the password's length.
+def get_password_length():
     while True:
-        pass_length = int(input("Password Length: "))
-        if pass_length <= 0:
-            print("You must enter a valid number. Please try again.")
-        else:
-            length = pass_length
-            break
+        print("How many characters (must be greater than 0) do you want your password to be?")
+        while True:
+            try:
+                pass_length = int(input("Password Length: "))
+                if pass_length <= 0:
+                    print("You must enter a valid number. Please try again.")
+                elif pass_length < 8:
+                    while True:
+                        print("\nWe suggest that your password is at least 8 characters long. Do you wish to proceed with a length of " + str(pass_length) + " or choose a new length? (Continue/New Length)")
+                        keep_length = input().lower()
+                        if keep_length == "continue":
+                            return pass_length
+                        elif (keep_length == "new length"):
+                            continue
+                        else:
+                            print("You must choose a valid selection. Please try again.")
+                            continue
+                else:
+                    return pass_length
+            except:
+                print("Please choose a valid (numerical) password length.")
 
-    ## Asks user about how many passwords to generate.
-    print("How many passwords (must be greater than 0) do you want to generate?")
+def get_password_amount():
     while True:
-        pass_amount = int(input("Number of Passwords: "))
-        if pass_amount <= 0:
-            print("You must enter a valid number. Please try again")
-        else:
-            amount = pass_amount
-            break
-    break
+        ## Asks user about how many passwords to generate.
+        print("How many passwords (must be greater than 0) do you want to generate?")
+        while True:
+            try:
+                pass_amount = int(input("Number of Passwords: "))
+                if pass_amount <= 0:
+                    print("You must enter a valid number. Please try again.")
+                else:
+                    return pass_amount
+            except:
+                print("Please choose a valid number of passwords to generate.")
 
 ## Generates password(s) given the user's requirements
 while True:
+    length = get_password_length()
+    amount = get_password_amount()
     for _ in range(amount):
         char_list = []
 
