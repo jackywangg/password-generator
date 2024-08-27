@@ -7,6 +7,7 @@ special_characters = "#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
 length = 0
 amount = 0
 all = ""
+char_list = []
 
 upper, lower, numbers, s_char = False, False, False, False
 
@@ -16,36 +17,57 @@ while not (upper or lower or numbers or s_char):
     print("You MUST select at least one character type.")
 
     ## Asks user if they want to include uppercase letters.
-    print("Do you want to include UPPERCASE letters?")
-    upper_val = input("").lower()
-    if upper_val == "yes":
-        upper = True
-    else:
-        upper = False
+    while True:
+        print("Do you want to include UPPERCASE letters?")
+        upper_val = input("").lower()
+        if upper_val == "yes":
+            upper = True
+            break
+        elif upper_val == "no":
+            upper = False
+            break
+        else:
+            print("Not a valid selection. Please try again.")
 
     ## Asks user if they want to include lowercase letters.
-    print("Do you want to include LOWERCASE letters?")
-    lower_val = input("").lower()
-    if lower_val == "yes":
-        lower = True
-    else:
-        lower = False
+    while True:
+        print("Do you want to include LOWERCASE letters?")
+        lower_val = input("").lower()
+        if lower_val == "yes":
+            lower = True
+            break
+        elif lower_val == "no":
+            lower = False
+            break
+        else:
+            print("Not a valid selection. Please try again.")
+
 
     ## Asks user if they want to include numbers.
-    print("Do you want to include NUMBERS?")
-    number_val = input("").lower()
-    if number_val == "yes":
-        numbers = True
-    else:
-        numbers = False
+    while True:
+        print("Do you want to include NUMBERS?")
+        number_val = input("").lower()
+        if number_val == "yes":
+            numbers = True
+            break
+        elif number_val == "no":
+            numbers = False
+            break
+        else:
+            print("Not a valid selection. Please try again.")
 
     ## Asks user if they want to include special characters.
-    print("Do you want to include SPECIAL CHARACTERS?")
-    special_val = input("").lower()
-    if special_val == "yes":
-        s_char = True
-    else:
-        s_char = False
+    while True:
+        print("Do you want to include SPECIAL CHARACTERS?")
+        special_val = input("").lower()
+        if special_val == "yes":
+            s_char = True
+            break
+        elif special_val == "no":
+            s_char = False
+            break
+        else:
+            print("Not a valid selection. Please try again.")
     
     ## Ensures that there must be at least one character type selected
     if not (upper or lower or numbers or s_char):
