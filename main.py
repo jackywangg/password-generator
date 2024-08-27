@@ -7,7 +7,6 @@ special_characters = "#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
 length = 0
 amount = 0
 all = ""
-char_list = []
 
 upper, lower, numbers, s_char = False, False, False, False
 
@@ -77,12 +76,16 @@ while not (upper or lower or numbers or s_char):
 ## Prints the list of character types the user has selected
 print("You have selected the following character types: ")
 if upper:
+    all += uppercase_letters
     print("UPPERCASE letters")
 if lower:
+    all += lowercase_letters
     print("LOWERCASE letters")
 if numbers:
+    all += digits
     print("NUMBERS")
 if s_char:
+    all += special_characters
     print("SPECIAL CHARACTERS")
 
 while True:
@@ -109,23 +112,32 @@ while True:
 
 ## Generates password(s) given the user's requirements
 while True:
-    if upper:
-        all += uppercase_letters
-    if lower:
-        all += lowercase_letters
-    if numbers:
-        all += digits
-    if s_char:
-        all += special_characters
+    for _ in range(amount):
+        char_list = []
 
-    for x in range(amount):
-        password = "".join(random.sample(all, length))
+        if upper:
+            char_list.append(random.choice(uppercase_letters))
+        if lower:
+            char_list.append(random.choice(lowercase_letters))
+        if numbers:
+            char_list.append(random.choice(digits))
+        if s_char:
+            char_list.append(random.choice(special_characters))
+
+        ## append rest of password with random characters
+        while len(char_list) < length:
+            char_list.append(random.choice(all))
+
+        random.shuffle(char_list)
+
+        password = "".join(char_list)
         print(password)
-
-    new_set = input("Generate new set? (Yes/No): ").lower()
-    if (new_set == "yes"):
-        continue
-    else:
-        break
-
-print("Thank you for using Password Generator!")
+    while True:
+        new_set = input("Generate new set? (Yes/No): ").lower()
+        if (new_set == "yes"):
+            break
+        elif (new_set == "no"):
+            print("Thank you for using Password Generator!")
+            exit()
+        else:
+            print("You must enter a valid selection. Please try again.")
