@@ -76,7 +76,7 @@ def get_password_length():
                         if keep_length == "continue":
                             return pass_length
                         elif (keep_length == "new length"):
-                            continue
+                            break
                         else:
                             print("You must choose a valid selection. Please try again.")
                             continue
