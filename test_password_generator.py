@@ -83,14 +83,26 @@ def test_get_password_length_seven_nine():
     with patch("builtins.input", side_effect=["7", "new length", "9"]):
         assert get_password_length() == 9
 
+def test_get_password_length_invalid_valid():
+    with patch("builtins.input", side_effect=["7", "hi", "new length", "9"]):
+        assert get_password_length() == 9
+
 def test_get_password_length_negative():
     with patch("builtins.input", side_effect=["-1", "8"]):
         assert get_password_length() == 8
 
-## returns number of passwords amount
-def test_get_password_amount():
+## Testing returning the password amount
+def test_get_password_amount_no_errors():
     with patch("builtins.input", return_value = "8"):
         assert get_password_amount() == 8
+
+def test_get_password_amount_one():
+    with patch("builtins.input", return_value = "1"):
+        assert get_password_amount() == 1
+
+def test_get_password_amount_zero():
+    with patch("builtins.input", side_effect = ["0", "1"]):
+        assert get_password_amount() == 1
 
 if __name__ == '__main__':
     pytest.main()
