@@ -1,5 +1,6 @@
 import random
 import string
+import json
 
 uppercase_letters = string.ascii_uppercase
 lowercase_letters = string.ascii_lowercase
@@ -7,6 +8,7 @@ digits = string.digits
 special_characters = string.punctuation
 length = 0
 amount = 0
+passwords_list = []
 
 ## Default these values to False. 
 
@@ -85,6 +87,7 @@ def get_password_length():
             except:
                 print("Please choose a valid (numerical) password length.")
 
+## Returns how many passwords to generate
 def get_password_amount():
     while True:
         ## Asks user about how many passwords to generate.
@@ -99,7 +102,43 @@ def get_password_amount():
             except:
                 print("Please choose a valid number of passwords to generate.")
 
+## Loads the existing passwords.json file
+def load_passwords(filename="passwords.json"):
+    try:
+        with open(filename, "r") as file:
+            data = json.load(file)
+            if "passwords" not in data:
+                data["passwords"] = []
+            return data["passwords"]
+    except FileNotFoundError:
+        return []
+
+## Saves new information into the existing passwords.json file
+def save_passwords(passwords_list, filename="passwords.json"):
+    data = {"passwords": passwords_list}
+    with open(filename, "w") as file:
+        json.dump(data, file, indent=4)
+
+## Prompts the user if they would want to create a new instance or load an existing one
+def new_or_load():
+    global passwords_list
+    while True:
+        prompt = input("Would you like to generate a new list or load an existing list? (New/Load): ").lower()
+        if prompt == "load":
+            passwords_list = load_passwords()
+            print("Loaded passwords: " + json.dumps(passwords_list, indent = 4))
+            break
+        elif prompt == "new":
+            passwords_list.clear()
+            break
+        else:
+            print("Please enter a valid response.")
+
+
 def password_generator():
+    global passwords_list
+    
+    new_or_load()
     preferences = get_user_preferences()
 
     ## Generates password(s) given the user's requirements
@@ -126,12 +165,17 @@ def password_generator():
                 random.shuffle(char_list)
 
                 password = "".join(char_list)
+                passwords_list.append(password)
                 print(password)
             while True:
                 new_set = input("Generate new set? (Yes/No): ").lower()
                 if (new_set == "yes"):
                     break
                 elif (new_set == "no"):
+                    save_or_not = input("Do you wish to save this list? (Yes/No): ").lower()
+                    if (save_or_not == "yes"):
+                        save_passwords(passwords_list)
+                        print("Passwords saved successfully")
                     print("Thank you for using Password Generator!")
                     exit()
                 else:
